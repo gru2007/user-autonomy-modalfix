@@ -3,10 +3,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
 import showModal from "discourse/lib/show-modal";
-// import Composer from "discourse/models/composer";
+import TopicTimer from "discourse/models/topic-timer";
+import I18n from "I18n";
+import Composer from "discourse/models/composer";
 // import DiscourseURL from "discourse/lib/url";
 // import { getOwner } from "discourse-common/lib/get-owner";
-// import I18n from "I18n";
 // import { avatarFor } from "discourse/widgets/post";
 // import ComponentConnector from "discourse/widgets/component-connector";
 // import RawHtml from "discourse/widgets/raw-html";
@@ -41,16 +42,50 @@ function init(api) {
       }
     },
   });
+  TopicTimer.reopenClass({
+    update(topicId, time, basedOnLastPost, statusType, categoryId, durationMinutes) {
+      let data = {
+        time,
+        status_type: statusType,
+      };
+      if (basedOnLastPost) {
+        data.based_on_last_post = basedOnLastPost;
+      }
+      if (categoryId) {
+        data.category_id = categoryId;
+      }
+      if (durationMinutes) {
+        data.duration_minutes = durationMinutes;
+      }
+      if (currentUser.canManageTopic) {
+        // Discourse default ajax
+        return ajax({
+          url: `/t/${topicId}/timer`,
+          type: "POST",
+          data,
+        });
+      } else {
+        data.id = topicId;
+        return ajax({
+          url: `/topic_op_admin/set_topic_op_timer`,
+          type: "POST",
+          data,
+        });
+      }
+    },
+  });
+
   api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function () {
-    // TODO: 添加其他开关
+    // TODO: 添加其他开关!
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
     showModal("set-topic-op-admin-status", {
       model: {
         topic,
+        currentUser,
         action: {
           submit() {
-            this.send("closeModal");
+            this.setProperties({ loading: true });
             ajax("/topic_op_admin/set_topic_op_admin_status", {
               method: "POST",
               data: {
@@ -59,6 +94,8 @@ function init(api) {
               },
             })
               .then((res) => {
+                this.setProperties({ loading: false });
+                this.send("closeModal");
                 if (!res.success) {
                   dialog.alert(res.message);
                 }
@@ -80,29 +117,41 @@ function init(api) {
     });
   });
   api.attachWidgetAction("topic-OP-admin-menu", "apply-for-op-admin", function () {
-    // TODO 添加说明文本
+    const composerController = this.register.lookup("controller:composer");
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
+    const textTemplate =
+      I18n.t("topic_op_admin.apply_modal.apply_template").replaceAll("#", `[${topic.title}](${topic.url})`) +
+      `\n${I18n.t("topic_op_admin.apply_modal.apply_reason")}\n`;
     showModal("request-op-admin-form", {
+      loading: false,
       model: {
         submit() {
-          this.send("closeModal");
-          const rawText = `
-请求将 [${topic.title}](${topic.url}) 设为楼主自我管理。
-### 原因：
-${this.reason}
-`;
+          this.setProperties({ loading: true });
           ajax("/topic_op_admin/request_for_topic_op_admin", {
             method: "POST",
             data: {
               id: topic.id,
-              raw: rawText,
+              raw: textTemplate + this.reason,
             },
           })
             .then((res) => {
+              this.setProperties({ loading: false });
+              this.send("closeModal");
               dialog.alert(res.message);
             })
             .catch(popupAjaxError);
+        },
+        showComposer() {
+          this.send("closeModal");
+          composerController.open({
+            action: Composer.PRIVATE_MESSAGE,
+            draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+            recipients: currentUser.op_admin_form_recipients,
+            topicTitle: I18n.t("topic_op_admin.apply_modal.apply_template_title").replaceAll("#", topic.title),
+            topicBody: textTemplate,
+            archetypeId: "private_message",
+          });
         },
       },
     });
@@ -143,6 +192,26 @@ ${this.reason}
           dialog.alert(res.message);
         } else {
           topic.model.toggleProperty("visible");
+        }
+      })
+      .catch(popupAjaxError);
+  });
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleArchived", function () {
+    const topic = this.register.lookup("controller:topic");
+    const dialog = this.register.lookup("service:dialog");
+    ajax("/topic_op_admin/update_topic_status/", {
+      method: "POST",
+      data: {
+        id: this.attrs.topic.id,
+        status: "archived",
+        enabled: !this.attrs.topic.archived,
+      },
+    })
+      .then((res) => {
+        if (!res.success) {
+          dialog.alert(res.message);
+        } else {
+          topic.model.toggleProperty("archived");
         }
       })
       .catch(popupAjaxError);

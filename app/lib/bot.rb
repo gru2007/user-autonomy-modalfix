@@ -33,7 +33,6 @@ module TopicOpUserAdminBot
         skip_validations: true,
         topic_id: SiteSetting.topic_op_admin_logger_topic?,
         raw: rawText,
-        import_mode: true,
         guardian: Guardian.new(Discourse.system_user),
       )
     end
@@ -45,7 +44,6 @@ module TopicOpUserAdminBot
       skip_validations: true,
       topic_id: topic_id,
       raw: rawText,
-      import_mode: true,
       guardian: Guardian.new(Discourse.system_user),
     )
   end

@@ -10,12 +10,24 @@ zh_CN:
     topic_op_admin:
       enable_topic_op_admin: "楼主管理设置…"
       apply_for_op_admin: "申请自我管理…"
-      modal:
+      apply_modal:
+        show_composer: "使用编辑器"
+        introduce_title: "什么是楼主自我管理？"
+        what_is: "开启楼主自我管理后，你将可以对您的话题进行一些管理操作。"
+        tell_reason: "说明你申请的原因"
+        apply_template: "请求将 # 设为楼主自我管理。"
+        apply_template_title: "请求将话题「#」设为楼主自我管理"
+        apply_reason: "原因："
+      admin_modal:
         title: "楼主管理设置…"
         enable_close: "允许楼主关闭/打开话题"
         enable_visible: "允许楼主隐藏/显示话题"
         enable_slow_mode: "允许楼主关闭/打开话题慢速模式"
-        tell_reason: "说明你申请的原因"
+        enable_make_PM: "允许楼主将话题转换为私信"
+        enable_archive: "允许楼主存档/打开话题"
+        enable_set_timer: "允许楼主设置话题计时器"
+        enable_silence: "允许楼主在话题内禁言其他用户"
+        enable_fold_posts: "允许楼主折叠帖子"
     admin:
       site_settings:
         categories:

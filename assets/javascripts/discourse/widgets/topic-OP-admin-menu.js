@@ -204,6 +204,18 @@ export default createWidget("topic-OP-admin-menu", {
         });
       }
     }
+    if (topic.topic_op_admin_status.can_archive) {
+      if (!isPrivateMessage) {
+        this.addActionButton({
+          className: "topic-OP-admin-archive",
+          buttonClass: "popup-menu-btn",
+          action: "topicOPtoggleArchived",
+          icon: topic.get("archived") ? "folder-open" : "folder",
+          label: topic.get("archived") ? "actions.unarchive" : "actions.archive",
+          button_group: "topic",
+        });
+      }
+    }
     if (topic.topic_op_admin_status.can_visible) {
       this.addActionButton({
         className: "topic-OP-admin-visible",

@@ -30,6 +30,7 @@ after_initialize do
     put "/topic_op_admin/update_slow_mode" => "topic_op_admin#update_slow_mode"
     post "/topic_op_admin/set_topic_op_admin_status" => "topic_op_admin#set_topic_op_admin_status"
     post "/topic_op_admin/request_for_topic_op_admin" => "topic_op_admin#request_for_topic_op_admin"
+    post "/topic_op_admin/set_topic_op_timer" => "topic_op_admin#set_topic_op_timer"
   end
 
   add_to_class(:user, :can_manipulate_topic_op_adminable?) do
@@ -38,6 +39,9 @@ after_initialize do
   end
   add_to_serializer(:current_user, :can_manipulate_topic_op_adminable?) do
     user.can_manipulate_topic_op_adminable?
+  end
+  add_to_serializer(:current_user, :op_admin_form_recipients?) do
+    SiteSetting.topic_op_admin_manipulatable_groups_map.map { |id| Group.find_by(id:).name }
   end
   add_to_class(:guardian, :can_manipulate_topic_op_adminable?) do
     user.can_manipulate_topic_op_adminable?
@@ -49,10 +53,17 @@ after_initialize do
   add_to_class(:guardian, :can_close_topic_as_op?) do |topic|
     topic.topic_op_admin_status?.can_close && user.id == topic.user_id
   end
+  add_to_class(:guardian, :can_archive_topic_as_op?) do |topic|
+    return false if topic.archetype == Archetype.private_message
+    topic.topic_op_admin_status?.can_archive && user.id == topic.user_id
+  end
   add_to_class(:guardian, :can_unlist_topic_as_op?) do |topic|
     topic.topic_op_admin_status?.can_visible && user.id == topic.user_id
   end
   add_to_class(:guardian, :can_set_topic_slowmode_as_op?) do |topic|
     topic.topic_op_admin_status?.can_slow_mode && user.id == topic.user_id
+  end
+  add_to_class(:guardian, :can_set_topic_timer_as_op?) do |topic|
+    topic.topic_op_admin_status?.can_set_timer && user.id == topic.user_id
   end
 end
