@@ -1,0 +1,4 @@
+zh_CN:
+  topic_op_admin:
+    no_perm: "您没有权限执行此操作"
+    get_request: "您的请求我们已经收到，请耐心等待。"

@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+# name: User-Autonomy-Plugin
+# about: Give topic's op some admin function
+# version: 0.0.1
+# authors: Lhc_fl
+# url: TODO
+# required_version: 3.0.0
+
+enabled_site_setting :user_autonomy_plugin_enabled
+
+# register_asset "stylesheets/post_folding.scss"
+if respond_to?(:register_svg_icon)
+  register_svg_icon "cog"
+  register_svg_icon "cogs"
+  register_svg_icon "envelope-open-text"
+end
+
+require_relative 'app/lib/bot.rb'
+
+after_initialize do
+  %w[
+    app/controllers/topic_op_admin_controller.rb
+    app/lib/bot.rb
+    app/models/topic_op_admin_status.rb
+  ].each { |f| load File.expand_path("../#{f}", __FILE__) }
+
+  Discourse::Application.routes.append do
+    post "/topic_op_admin/update_topic_status" => "topic_op_admin#update_topic_status"
+    put "/topic_op_admin/update_slow_mode" => "topic_op_admin#update_slow_mode"
+    post "/topic_op_admin/set_topic_op_admin_status" => "topic_op_admin#set_topic_op_admin_status"
+    post "/topic_op_admin/request_for_topic_op_admin" => "topic_op_admin#request_for_topic_op_admin"
+  end
+
+  add_to_class(:user, :can_manipulate_topic_op_adminable?) do
+    return true if admin?
+    in_any_groups?(SiteSetting.topic_op_admin_manipulatable_groups_map)
+  end
+  add_to_serializer(:current_user, :can_manipulate_topic_op_adminable?) { user.can_manipulate_topic_op_adminable? }
+  add_to_class(:guardian, :can_manipulate_topic_op_adminable?) { user.can_manipulate_topic_op_adminable? }
+
+  add_to_class(:topic, :topic_op_admin_status?) { TopicOpAdminStatus.getRecord?(id) }
+  add_to_serializer(:topic_view, :topic_op_admin_status) {topic.topic_op_admin_status?}
+
+  add_to_class(:guardian, :can_close_topic_as_op?) do |topic|
+    topic.topic_op_admin_status?.can_close && user.id == topic.user_id
+  end
+  add_to_class(:guardian, :can_unlist_topic_as_op?) do |topic|
+    topic.topic_op_admin_status?.can_visible && user.id == topic.user_id
+  end
+  add_to_class(:guardian, :can_set_topic_slowmode_as_op?) do |topic|
+    topic.topic_op_admin_status?.can_slow_mode && user.id == topic.user_id
+  end
+  
+
+end
