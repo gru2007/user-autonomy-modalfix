@@ -16,7 +16,7 @@ if respond_to?(:register_svg_icon)
   register_svg_icon "envelope-open-text"
 end
 
-require_relative 'app/lib/bot.rb'
+require_relative "app/lib/bot.rb"
 
 after_initialize do
   %w[
@@ -36,11 +36,15 @@ after_initialize do
     return true if admin?
     in_any_groups?(SiteSetting.topic_op_admin_manipulatable_groups_map)
   end
-  add_to_serializer(:current_user, :can_manipulate_topic_op_adminable?) { user.can_manipulate_topic_op_adminable? }
-  add_to_class(:guardian, :can_manipulate_topic_op_adminable?) { user.can_manipulate_topic_op_adminable? }
+  add_to_serializer(:current_user, :can_manipulate_topic_op_adminable?) do
+    user.can_manipulate_topic_op_adminable?
+  end
+  add_to_class(:guardian, :can_manipulate_topic_op_adminable?) do
+    user.can_manipulate_topic_op_adminable?
+  end
 
   add_to_class(:topic, :topic_op_admin_status?) { TopicOpAdminStatus.getRecord?(id) }
-  add_to_serializer(:topic_view, :topic_op_admin_status) {topic.topic_op_admin_status?}
+  add_to_serializer(:topic_view, :topic_op_admin_status) { topic.topic_op_admin_status? }
 
   add_to_class(:guardian, :can_close_topic_as_op?) do |topic|
     topic.topic_op_admin_status?.can_close && user.id == topic.user_id
@@ -51,6 +55,4 @@ after_initialize do
   add_to_class(:guardian, :can_set_topic_slowmode_as_op?) do |topic|
     topic.topic_op_admin_status?.can_slow_mode && user.id == topic.user_id
   end
-  
-
 end

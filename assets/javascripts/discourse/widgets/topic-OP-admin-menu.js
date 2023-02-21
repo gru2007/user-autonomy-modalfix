@@ -1,10 +1,5 @@
 /* eslint-disable no-unused-vars */
-import {
-  applyDecorators,
-  createWidget,
-  createWidgetFrom,
-  queryRegistry,
-} from "discourse/widgets/widget";
+import { applyDecorators, createWidget, createWidgetFrom, queryRegistry } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import RawHtml from "discourse/widgets/raw-html";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -58,10 +53,7 @@ createWidget("topic-OP-admin-menu-button", {
 
     // We don't show the button when expanded on the right side on desktop
 
-    if (
-      menu.attrs.actionButtons.length &&
-      (!(attrs.rightSide && state.expanded) || this.site.mobileView)
-    ) {
+    if (menu.attrs.actionButtons.length && (!(attrs.rightSide && state.expanded) || this.site.mobileView)) {
       result.push(
         this.attach("button", {
           className:
@@ -133,10 +125,7 @@ createWidget("topic-OP-admin-menu-button", {
   },
 
   didRenderWidget() {
-
-    let menuButtons = document.querySelectorAll(
-      ".topic-OP-admin-popup-menu button"
-    );
+    let menuButtons = document.querySelectorAll(".topic-OP-admin-popup-menu button");
 
     if (menuButtons && menuButtons[0]) {
       menuButtons[0].focus();
@@ -163,7 +152,9 @@ export default createWidget("topic-OP-admin-menu", {
     const isPrivateMessage = topic.get("isPrivateMessage");
     const visible = topic.get("visible");
 
-    if (isPrivateMessage) {return;}
+    if (isPrivateMessage) {
+      return;
+    }
 
     if (this.get("currentUser.can_manipulate_topic_op_adminable")) {
       this.addActionButton({
@@ -174,9 +165,11 @@ export default createWidget("topic-OP-admin-menu", {
         fullLabel: "topic_op_admin.enable_topic_op_admin",
         button_group: "manipulating",
       });
-    };
+    }
 
-    if (topic.user_id !== this.get("currentUser.id")) { return; }
+    if (topic.user_id !== this.get("currentUser.id")) {
+      return;
+    }
 
     if (!this.get("currentUser.can_manipulate_topic_op_adminable")) {
       this.addActionButton({
@@ -187,8 +180,7 @@ export default createWidget("topic-OP-admin-menu", {
         fullLabel: "topic_op_admin.apply_for_op_admin",
         button_group: "manipulating",
       });
-    };
-
+    }
 
     // Admin actions
     if (topic.topic_op_admin_status.can_close) {
@@ -243,7 +235,6 @@ export default createWidget("topic-OP-admin-menu", {
         button_group: "time",
       });
     }
-
   },
 
   buildAttributes(attrs) {
@@ -257,8 +248,7 @@ export default createWidget("topic-OP-admin-menu", {
     if (attrs.openUpwards) {
       const documentHeight = $(document).height();
       const mainHeight = $(".ember-application").height();
-      let bottom =
-        documentHeight - top - 70 - $(".ember-application").offset().top;
+      let bottom = documentHeight - top - 70 - $(".ember-application").offset().top;
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
@@ -284,23 +274,12 @@ export default createWidget("topic-OP-admin-menu", {
   },
 
   html(attrs) {
-    const extraButtons = applyDecorators(
-      this,
-      "topicOPAdminMenuButtons",
-      this.attrs,
-      this.state
-    );
+    const extraButtons = applyDecorators(this, "topicOPAdminMenuButtons", this.attrs, this.state);
 
-    const actionButtons = attrs.actionButtons
-      .concat(extraButtons)
-      .filter(Boolean);
+    const actionButtons = attrs.actionButtons.concat(extraButtons).filter(Boolean);
 
     const buttonMap = actionButtons.reduce(
-      (prev, current) =>
-        prev.set(current.button_group, [
-          ...(prev.get(current.button_group) || []),
-          current,
-        ]),
+      (prev, current) => prev.set(current.button_group, [...(prev.get(current.button_group) || []), current]),
       new Map()
     );
 

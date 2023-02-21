@@ -24,7 +24,9 @@ const pluginId = "topic-OP-admin";
 function init(api) {
   const currentUser = api.getCurrentUser();
 
-  if (!currentUser) {return;}
+  if (!currentUser) {
+    return;
+  }
 
   Topic.reopenClass({
     setSlowMode(topicId, seconds, enabledUntil) {
@@ -39,13 +41,12 @@ function init(api) {
       }
     },
   });
-  api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function() {
+  api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function () {
     // TODO: 添加其他开关
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
     showModal("set-topic-op-admin-status", {
       model: {
-        text: "66666666666",
         topic,
         action: {
           submit() {
@@ -55,14 +56,15 @@ function init(api) {
               data: {
                 id: topic.id,
                 new_status: this.model.enables,
-              }
-            }).then((res) => {
-              if (!res.success) {
-                dialog.alert(res.message);
-              }
+              },
             })
-            .catch(popupAjaxError);
-          }
+              .then((res) => {
+                if (!res.success) {
+                  dialog.alert(res.message);
+                }
+              })
+              .catch(popupAjaxError);
+          },
         },
         enables: {
           close: topic.topic_op_admin_status.can_close,
@@ -77,7 +79,7 @@ function init(api) {
       },
     });
   });
-  api.attachWidgetAction("topic-OP-admin-menu", "apply-for-op-admin", function() {
+  api.attachWidgetAction("topic-OP-admin-menu", "apply-for-op-admin", function () {
     // TODO 添加说明文本
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
@@ -95,17 +97,17 @@ ${this.reason}
             data: {
               id: topic.id,
               raw: rawText,
-            }
-          }).then((res) => {
-            dialog.alert(res.message);
+            },
           })
-          .catch(popupAjaxError);
-        }
-      }
+            .then((res) => {
+              dialog.alert(res.message);
+            })
+            .catch(popupAjaxError);
+        },
+      },
     });
-
   });
-  api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleClose", function() {
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleClose", function () {
     const topic = this.register.lookup("controller:topic");
     const dialog = this.register.lookup("service:dialog");
     ajax("/topic_op_admin/update_topic_status/", {
@@ -114,17 +116,18 @@ ${this.reason}
         id: this.attrs.topic.id,
         status: "closed",
         enabled: !this.attrs.topic.closed,
-      }
-    }).then((res) => {
-      if (!res.success) {
-        dialog.alert(res.message);
-      } else {
-        topic.model.toggleProperty("closed");
-      }
+      },
     })
-    .catch(popupAjaxError);
+      .then((res) => {
+        if (!res.success) {
+          dialog.alert(res.message);
+        } else {
+          topic.model.toggleProperty("closed");
+        }
+      })
+      .catch(popupAjaxError);
   });
-  api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleVisibility", function() {
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleVisibility", function () {
     const topic = this.register.lookup("controller:topic");
     const dialog = this.register.lookup("service:dialog");
     ajax("/topic_op_admin/update_topic_status/", {
@@ -133,15 +136,16 @@ ${this.reason}
         id: this.attrs.topic.id,
         status: "visible",
         enabled: !this.attrs.topic.visible,
-      }
-    }).then((res) => {
-      if (!res.success) {
-        dialog.alert(res.message);
-      } else {
-        topic.model.toggleProperty("visible");
-      }
+      },
     })
-    .catch(popupAjaxError);
+      .then((res) => {
+        if (!res.success) {
+          dialog.alert(res.message);
+        } else {
+          topic.model.toggleProperty("visible");
+        }
+      })
+      .catch(popupAjaxError);
   });
   api.decorateWidget("timeline-controls:after", (helper) => {
     const { fullScreen, topic } = helper.attrs;

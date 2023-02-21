@@ -5,17 +5,11 @@ class TopicOpAdminStatus < ActiveRecord::Base
 
   def self.getRecord?(id)
     ret = self.find_by(id:)
-    unless ret
-      self.updateRecord(id)
-    end
+    self.updateRecord(id) unless ret
     ret = self.find_by(id:)
   end
 
   def self.updateRecord(id, **new_status)
-    if self.exists?(id:)
-      self.find_by(id:).update!(**new_status)
-    else
-      self.create(id: id, **new_status)
-    end
+    self.exists?(id:) ? self.find_by(id:).update!(**new_status) : self.create(id: id, **new_status)
   end
 end
