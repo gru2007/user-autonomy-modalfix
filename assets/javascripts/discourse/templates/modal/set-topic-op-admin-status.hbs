@@ -47,7 +47,7 @@
     icon=inviteIcon
     action=(action model.action.submit)
     class="btn-primary"
-    disabled=disabled
+    disabled=this.loading
   }}
   <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
   <DModalCancel @close={{route-action "closeModal"}} />

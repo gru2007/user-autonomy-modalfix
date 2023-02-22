@@ -76,7 +76,6 @@ function init(api) {
   });
 
   api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function () {
-    // TODO: 添加其他开关!
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
     showModal("set-topic-op-admin-status", {
@@ -85,6 +84,9 @@ function init(api) {
         currentUser,
         action: {
           submit() {
+            if (this.loading) {
+              return;
+            }
             this.setProperties({ loading: true });
             ajax("/topic_op_admin/set_topic_op_admin_status", {
               method: "POST",
@@ -127,6 +129,9 @@ function init(api) {
       loading: false,
       model: {
         submit() {
+          if (this.loading) {
+            return;
+          }
           this.setProperties({ loading: true });
           ajax("/topic_op_admin/request_for_topic_op_admin", {
             method: "POST",
@@ -193,6 +198,9 @@ function init(api) {
             if (this.reason === "") {
               dialog.alert(I18n.t("topic_op_admin.reason_modal.alert_no_reason"));
             } else {
+              if (this.loading) {
+                return;
+              }
               this.setProperties({ loading: true });
               sendToggleOPActionAjax(helper, status, this.reason, this);
             }
@@ -219,36 +227,10 @@ function init(api) {
       return helper.attach("topic-OP-admin-menu-button", {
         topic,
         addKeyboardTargetClass: false,
+        openDownwards: true,
         currentUser,
       });
     }
-  });
-  api.decorateWidget("topic-footer-buttons:before", (helper) => {
-    const { fullScreen, topic } = helper.attrs;
-    if (!fullScreen && currentUser) {
-      return helper.attach("topic-OP-admin-menu-button", {
-        topic,
-        addKeyboardTargetClass: false,
-        currentUser,
-      });
-    }
-  });
-  api.registerTopicFooterButton({
-    // TODO
-    id: "topic-OP-admin-menu-button",
-    icon() {
-      return "cog";
-    },
-    priority: 99999,
-    action: "showTopicOPAdminMenu",
-    dropdown() {
-      return this.site.mobileView;
-    },
-    classNames: ["topic-OP-admin-button"],
-    displayed() {
-      // console.log(this);
-      return true;
-    },
   });
 }
 

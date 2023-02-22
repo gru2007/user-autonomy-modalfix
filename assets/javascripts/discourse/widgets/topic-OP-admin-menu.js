@@ -46,7 +46,7 @@ createWidget("topic-OP-admin-menu-button", {
     const menu = this.attach("topic-OP-admin-menu", {
       position: state.position,
       topic: attrs.topic,
-      openUpwards: attrs.openUpwards,
+      openDownwards: attrs.openDownwards,
       rightSide: !this.site.mobileView && attrs.rightSide,
       actionButtons: [],
     });
@@ -97,11 +97,14 @@ createWidget("topic-OP-admin-menu-button", {
     const buttonDOMRect = button.getBoundingClientRect();
     position.outerHeight = buttonDOMRect.height;
 
-    if (this.attrs.openUpwards) {
+    if (!this.attrs.openDownwards) {
       if (rtl) {
-        position.left -= buttonDOMRect.width + spacing;
+        position.left += -buttonDOMRect.width + menuWidth;
       } else {
-        position.left += buttonDOMRect.width + spacing;
+        position.left -= -buttonDOMRect.width + menuWidth;
+      }
+      if (position.left < 0) {
+        position.left = spacing;
       }
     } else {
       if (rtl) {
@@ -257,7 +260,7 @@ export default createWidget("topic-OP-admin-menu", {
       return;
     }
 
-    if (attrs.openUpwards) {
+    if (!attrs.openDownwards) {
       const documentHeight = $(document).height();
       const mainHeight = $(".ember-application").height();
       let bottom = documentHeight - top - 70 - $(".ember-application").offset().top;
