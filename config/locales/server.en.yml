@@ -5,6 +5,7 @@ en:
     apply_title: "Application to set # as OP self-management"
     reason_placeholder: "Operated by the OP's request"
     log_template:
+      reason: "Reason: "
       with_perm:
         set_admin_status: "Revised Topic # OP Admin Mode\n"
         closed: 
@@ -19,6 +20,9 @@ en:
         slow_mode:
           enable: "set slow mode for topic #"
           disable: "disabled slow mode for topic #"
+        make_PM:
+          enable: "convert topic # to PM"
+          disable: "convert topic # to public topic"
         set_timer: "changed topic timer for topic #\n"
       without_perm:
         set_admin_status: "Revised Topic # OP Admin Mode without authorization\n"
@@ -34,6 +38,9 @@ en:
         slow_mode:
           enable: "set slow mode for topic # without authorization"
           disable: "disabled slow mode for topic # without authorization"
+        make_PM:
+          enable: "convert topic # to PM without authorization"
+          disable: "convert topic # to public topic without authorization"
         set_timer: "changed topic timer for topic # without authorization\n"
         otherwise: "sent an unknown request to topic # . Here are the details:\n"
 

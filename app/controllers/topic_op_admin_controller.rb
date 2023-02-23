@@ -5,6 +5,10 @@ require_relative "../lib/bot.rb"
 class TopicOpAdminController < ::ApplicationController
   before_action :ensure_logged_in
 
+  def get_user()
+    SiteSetting.topic_op_admin_bot_override_user? ? TopicOpUserAdminBot.getBot() : guardian.user
+  end
+
   def update_topic_status
     unless SiteSetting.topic_op_admin_enabled
       return render_fail "topic_op_admin.not_enabled", status: 405
@@ -30,7 +34,7 @@ class TopicOpAdminController < ::ApplicationController
           I18n.t("topic_op_admin.log_template.with_perm.#{status}.#{enable_text}").gsub(
             "#",
             topic.url,
-          )
+          ) + "\n#{I18n.t("topic_op_admin.log_template.reason")} #{params[:reason]}"
       end
 
     generate_without_perm_logger_text =
@@ -40,7 +44,7 @@ class TopicOpAdminController < ::ApplicationController
           I18n.t("topic_op_admin.log_template.without_perm.#{status}.#{enable_text}").gsub(
             "#",
             topic.url,
-          )
+          ) + "\n#{I18n.t("topic_op_admin.log_template.reason")} #{params[:reason]}"
       end
 
     puts generate_with_perm_logger_text
@@ -75,7 +79,7 @@ class TopicOpAdminController < ::ApplicationController
     topic.update_status(
       status,
       enabled,
-      SiteSetting.topic_op_admin_bot_override_user? ? TopicOpUserAdminBot.getBot() : guardian.user,
+      get_user,
       until: params[:until],
       message: params[:reason] || I18n.t("topic_op_admin.reason_placeholder"),
     )
@@ -257,9 +261,60 @@ class TopicOpAdminController < ::ApplicationController
     end
   end
 
+  def topic_op_convert_topic
+    params.require(:id)
+    params.require(:type)
+    params.require(:reason)
+    topic = BotLoggingTopic.find_by(id: params[:id])
+
+    unless guardian.can_make_PM_as_op?(topic)
+      TopicOpUserAdminBot.botLogger(
+        "@#{guardian.user.username} " +
+          I18n.t("topic_op_admin.log_template.without_perm.make_PM.enable").gsub("#", topic.url) +
+          "\n```\n#{params.to_yaml}\n```",
+      )
+      return render_fail "topic_op_admin.no_perm", status: 403
+    end
+
+    if params[:type] == "public"
+      TopicOpUserAdminBot.botLogger(
+        "@#{guardian.user.username} " +
+          I18n.t("topic_op_admin.log_template.without_perm.make_PM.disable").gsub("#", topic.url) +
+          "\n```\n#{params.to_yaml}\n```",
+      )
+      return render_fail "topic_op_admin.no_perm", status: 403
+    else
+      converted_topic = topic.convert_to_private_message(get_user)
+      TopicOpUserAdminBot.botLogger(
+        "@#{guardian.user.username} " +
+          I18n.t("topic_op_admin.log_template.with_perm.make_PM.enable").gsub("#", topic.url) +
+          "\n#{I18n.t("topic_op_admin.log_template.reason")} #{params[:reason]}",
+      )
+    end
+
+    to_revise_post = Post.find_by(topic_id: topic.id, post_number: topic.highest_post_number + 1)
+
+    # 修订帖子
+    if to_revise_post.raw == "" && to_revise_post.user_id == get_user.id
+      PostRevisor.new(to_revise_post, topic).revise!(get_user, { raw: params[:reason] }, {})
+    else
+      PostCreator.create(get_user, topic_id: topic.id, raw: params[:reason])
+    end
+
+    render_topic_changes(converted_topic)
+  end
+
   def render_fail(*args, **kwargs)
     response.status = kwargs[:status] || 400
     render json: { success: false, message: I18n.t(*args, **kwargs.except(:status)) }
     nil
+  end
+
+  def render_topic_changes(dest_topic)
+    if dest_topic.present?
+      render json: { success: true, url: dest_topic.relative_url }
+    else
+      render json: { success: false }
+    end
   end
 end

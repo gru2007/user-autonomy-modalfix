@@ -250,6 +250,19 @@ export default createWidget("topic-OP-admin-menu", {
         button_group: "time",
       });
     }
+
+    if (topic.topic_op_admin_status.can_make_PM) {
+      this.addActionButton({
+        className: "topic-admin-convert",
+        buttonClass: "popup-menu-btn",
+        action: isPrivateMessage
+          ? "topicOPConvertToPublicTopic" // TODO: convert to Public
+          : "topicOPConvertToPrivateMessage",
+        icon: isPrivateMessage ? "comment" : "envelope",
+        label: isPrivateMessage ? "actions.make_public" : "actions.make_private",
+        button_group: "staff",
+      });
+    }
   },
 
   buildAttributes(attrs) {

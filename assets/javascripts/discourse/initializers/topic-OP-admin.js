@@ -100,6 +100,8 @@ function init(api) {
                 this.send("closeModal");
                 if (!res.success) {
                   dialog.alert(res.message);
+                } else {
+                  window.location.reload();
                 }
               })
               .catch(popupAjaxError);
@@ -162,34 +164,70 @@ function init(api) {
     });
   });
 
-  function sendToggleOPActionAjax(helper, status, reason, model) {
+  /**
+   * send Ajax for topic-OP-admin-buttons, which often requires reason and model
+   * @param {string} url string url
+   * @param {string | "PUT" | "POST"} method string the method you need
+   * @param {object} data ajax data
+   * @param {object} helper helper
+   * @param {string | undefined} reason text of your reason
+   * @param {modal | undefined} modal modal if you have
+   */
+  function sendTopicOPAdminButtonAjax(url, method, data, helper, reason, modal) {
     const topic = helper.register.lookup("controller:topic");
     const dialog = helper.register.lookup("service:dialog");
     reason = reason || I18n.t("topic_op_admin.default_reason");
-    ajax("/topic_op_admin/update_topic_status/", {
-      method: "POST",
-      data: {
-        id: helper.attrs.topic.id,
-        status,
-        enabled: !helper.attrs.topic[status],
-        reason,
-      },
+    data.id = helper.attrs.topic.id;
+    data.reason = reason;
+    ajax(url, {
+      method,
+      data,
     })
       .then((res) => {
-        if (model) {
-          model.setProperties({ loading: false });
-          model.send("closeModal");
+        if (modal) {
+          modal.setProperties({ loading: false });
+          modal.send("closeModal");
         }
         if (!res.success) {
           dialog.alert(res.message);
         } else {
-          topic.model.toggleProperty(status);
+          // For ToggleOPAction like closed or archived
+          if (data.status) {
+            topic.model.toggleProperty(data.status);
+          }
         }
       })
       .catch(popupAjaxError);
   }
 
-  function toggleOPAction(helper, status) {
+  function sendToggleOPActionAjax(helper, status, reason, model) {
+    sendTopicOPAdminButtonAjax(
+      "/topic_op_admin/update_topic_status/",
+      "POST",
+      {
+        status,
+        enabled: !helper.attrs.topic[status],
+      },
+      helper,
+      reason,
+      model
+    );
+  }
+
+  function sendTopicConvertAjax(helper, status, reason, model) {
+    sendTopicOPAdminButtonAjax(
+      "/topic_op_admin/topic_op_convert_topic",
+      "PUT",
+      {
+        type: status,
+      },
+      helper,
+      reason,
+      model
+    );
+  }
+
+  function toggleTopicOPAdminButton(helper, status, func) {
     const dialog = helper.register.lookup("service:dialog");
     if (currentUser.siteSettings.topic_op_admin_require_reason_before_action) {
       showModal("reason-before-topic-op-action-form", {
@@ -202,14 +240,18 @@ function init(api) {
                 return;
               }
               this.setProperties({ loading: true });
-              sendToggleOPActionAjax(helper, status, this.reason, this);
+              func(helper, status, this.reason, this);
             }
           },
         },
       });
     } else {
-      sendToggleOPActionAjax(helper, status);
+      func(helper, status);
     }
+  }
+
+  function toggleOPAction(helper, status) {
+    toggleTopicOPAdminButton(helper, status, sendToggleOPActionAjax);
   }
 
   api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleClose", function () {
@@ -226,6 +268,9 @@ function init(api) {
   });
   api.attachWidgetAction("topic-OP-admin-menu", "topicOPShowTopicSlowModeUpdate", function () {
     this.register.lookup("controller:topic").send("showTopicSlowModeUpdate");
+  });
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPConvertToPrivateMessage", function () {
+    toggleTopicOPAdminButton(this, "private", sendTopicConvertAjax);
   });
   api.decorateWidget("timeline-controls:after", (helper) => {
     const { fullScreen, topic } = helper.attrs;

@@ -5,6 +5,7 @@ zh_CN:
     apply_title: "申请将 # 设置为楼主自我管理"
     reason_placeholder: "由楼主的要求操作"
     log_template:
+      reason: "原因："
       with_perm:
         set_admin_status: "修订话题 # 楼主管理模式\n"
         closed: 
@@ -19,6 +20,9 @@ zh_CN:
         slow_mode:
           enable: "对话题 # 设置了慢速模式"
           disable: "对话题 # 禁用了慢速模式"
+        make_PM:
+          enable: "将话题 # 转换为私信"
+          disable: "将话题 # 转换为公开话题"
         set_timer: "改变话题 # 的话题计时器\n"
       without_perm:
         set_admin_status: "在未经授权的情况下试图修订话题 # 楼主管理模式\n"
@@ -34,6 +38,9 @@ zh_CN:
         slow_mode:
           enable: "在未经授权的情况下试图对话题 # 设置慢速模式"
           disable: "在未经授权的情况下试图对话题 # 禁用慢速模式"
+        make_PM:
+          enable: "在未经授权的情况下试图将话题 # 转换为私信"
+          disable: "在未经授权的情况下试图将话题 # 转换为公开话题"
         set_timer: "在未经授权的情况下试图改变话题 # 的话题计时器\n"
         otherwise: "对话题 # 发送了未知请求，这是详细信息：\n"
 

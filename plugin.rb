@@ -32,6 +32,7 @@ after_initialize do
     post "/topic_op_admin/set_topic_op_admin_status" => "topic_op_admin#set_topic_op_admin_status"
     post "/topic_op_admin/request_for_topic_op_admin" => "topic_op_admin#request_for_topic_op_admin"
     post "/topic_op_admin/set_topic_op_timer" => "topic_op_admin#set_topic_op_timer"
+    put "/topic_op_admin/topic_op_convert_topic" => "topic_op_admin#topic_op_convert_topic"
   end
 
   add_to_class(:user, :can_manipulate_topic_op_adminable?) do
@@ -66,5 +67,8 @@ after_initialize do
   end
   add_to_class(:guardian, :can_set_topic_timer_as_op?) do |topic|
     topic.topic_op_admin_status?.can_set_timer && user.id == topic.user_id
+  end
+  add_to_class(:guardian, :can_make_PM_as_op?) do |topic|
+    topic.topic_op_admin_status?.can_make_PM && user.id == topic.user_id
   end
 end
