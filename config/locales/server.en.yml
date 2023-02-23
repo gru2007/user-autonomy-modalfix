@@ -1,0 +1,40 @@
+en:
+  topic_op_admin:
+    no_perm: "You do not have permission tfor this operation"
+    get_request: "We have received your request, please be patient."
+    apply_title: "Application to set # as OP self-management"
+    reason_placeholder: "Operated by the OP's request"
+    log_template:
+      with_perm:
+        set_admin_status: "Revised Topic # OP Admin Mode\n"
+        closed: 
+          enable: "close topic #"
+          disable: "open topic #"
+        visible:
+          enable: "show topic #"
+          disable: "unlist topic #"
+        archived:
+          enable: "archive topic #"
+          disable: "unarchive topic #"
+        slow_mode:
+          enable: "set slow mode for topic #"
+          disable: "disabled slow mode for topic #"
+        set_timer: "changed topic timer for topic #\n"
+      without_perm:
+        set_admin_status: "Revised Topic # OP Admin Mode without authorization\n"
+        closed: 
+          enable: "close topic # without authorization"
+          disable: "open topic # without authorization"
+        visible:
+          enable: "show topic # without authorization"
+          disable: "unlist topic # without authorization"
+        archived:
+          enable: "archive topic # without authorization"
+          disable: "unarchive topic # without authorization"
+        slow_mode:
+          enable: "set slow mode for topic # without authorization"
+          disable: "disabled slow mode for topic # without authorization"
+        set_timer: "changed topic timer for topic # without authorization\n"
+        otherwise: "sent an unknown request to topic # . Here are the details:\n"
+
+

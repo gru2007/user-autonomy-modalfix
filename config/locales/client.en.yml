@@ -1,0 +1,45 @@
+en:
+  site_settings:
+    user_autonomy_plugin_enabled: "Enable User Autonomy Plugin"
+    topic_op_admin_enabled: "Enable Topic OP admin menu"
+    topic_op_admin_bot_user_id: "(Required) The user_id of the Bot used in User Autonomy Plugin"
+    topic_op_admin_enable_topic_log: "Turn on the Bot's log function"
+    topic_op_admin_logger_topic: "Under the premise of topic_op_admin_enable_topic_log, the topic id used for the bot's log"
+    topic_op_admin_manipulatable_groups: "Groups that can manipulate OP-admin rights for a certain topic. (Admins can always operate)"
+    topic_op_admin_require_reason_before_action: "Require reasons before OP-admin"
+    topic_op_admin_bot_override_user: "Use bot instead of the OP as the operator"
+  js:
+    topic_op_admin:
+      menu_button_title: "OP admin menu"
+      enable_topic_op_admin: "OP-admin Settings..."
+      apply_for_op_admin: "Apply for autonomy..."
+      default_reason: "Operated by the OP's request"
+      reason_modal:
+        require_reason: "Fill in the reason..."
+        tell_reason: "Explain the reason of your operation"
+        alert_no_reason: "You haven't filled in the reason!"
+      apply_modal:
+        show_composer: "Use composer"
+        introduce_title: "What is the OP-admin"
+        what_is: "After enabling the OP-admin, you will be able to perform some moderator operations on your topics."
+        tell_reason: "Explain why you are applying"
+        apply_template: "Request to grant OP-admin permission to the topic #."
+        apply_template_title: "Request to grant OP-admin to #"
+        apply_reason: "Reason:"
+      admin_modal:
+        title: "OP-admin Settings..."
+        enable_close: "Allow OP to close/open this topic"
+        enable_visible: "Allow OP to toggle visibility to this topic"
+        enable_slow_mode: "Allow OP to set slow mode"
+        enable_make_PM: "Allow OP to make this topic a PM"
+        enable_archive: "Allow OP to archive/unarchive this topic"
+        enable_set_timer: "Allow OP to set topic timer"
+        enable_silence: "Allow OP to silence other users in the topic"
+        enable_fold_posts: "Allow OP to fold posts"
+    admin:
+      site_settings:
+        categories:
+          user_autonomy: User Autonomy
+    user_autonomy_plugin:
+      topic_op_admin:
+        enable_topic_op_admin: "Enable Topic OP admin"

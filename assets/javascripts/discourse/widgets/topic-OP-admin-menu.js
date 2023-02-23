@@ -233,7 +233,7 @@ export default createWidget("topic-OP-admin-menu", {
       this.addActionButton({
         className: "topic-OP-admin-slow-mode",
         buttonClass: "popup-menu-btn",
-        action: "showTopicSlowModeUpdate",
+        action: "topicOPShowTopicSlowModeUpdate",
         icon: "hourglass-start",
         label: "actions.slow_mode",
         button_group: "time",
@@ -244,7 +244,7 @@ export default createWidget("topic-OP-admin-menu", {
       this.addActionButton({
         className: "admin-topic-timer-update",
         buttonClass: "popup-menu-btn",
-        action: "showTopicTimerModal",
+        action: "topicOPShowTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
         button_group: "time",

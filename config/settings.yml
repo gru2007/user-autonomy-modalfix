@@ -1,12 +1,12 @@
 user_autonomy:
   user_autonomy_plugin_enabled:
-    default: true
+    default: false
     client: true
   topic_op_admin_enabled:
     default: true
     client: true
   topic_op_admin_manipulatable_groups:
-    client: true
+    client: false
     type: group_list
     list_type: compact
     default: "1|2|3|14" # by order: @admin, @moderators, @staff, @trust_level_4
@@ -15,13 +15,16 @@ user_autonomy:
     default: -2
     type: integer
     min: -100
-    client: true
+    client: false
+  topic_op_admin_bot_override_user:
+    default: false
+    client: false
   topic_op_admin_enable_topic_log:
     default: false
-    client: true
+    client: false
   topic_op_admin_logger_topic:
     default: 0
-    client: true
+    client: false
   topic_op_admin_require_reason_before_action:
     default: true
     client: true

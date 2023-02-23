@@ -221,6 +221,12 @@ function init(api) {
   api.attachWidgetAction("topic-OP-admin-menu", "topicOPtoggleArchived", function () {
     toggleOPAction(this, "archived");
   });
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPShowTopicTimerModal", function () {
+    this.register.lookup("controller:topic").send("showTopicTimerModal");
+  });
+  api.attachWidgetAction("topic-OP-admin-menu", "topicOPShowTopicSlowModeUpdate", function () {
+    this.register.lookup("controller:topic").send("showTopicSlowModeUpdate");
+  });
   api.decorateWidget("timeline-controls:after", (helper) => {
     const { fullScreen, topic } = helper.attrs;
     if (!fullScreen && currentUser) {

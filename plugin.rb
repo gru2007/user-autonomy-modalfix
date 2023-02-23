@@ -23,6 +23,7 @@ after_initialize do
     app/controllers/topic_op_admin_controller.rb
     app/lib/bot.rb
     app/models/topic_op_admin_status.rb
+    app/models/bot_logging_topic.rb
   ].each { |f| load File.expand_path("../#{f}", __FILE__) }
 
   Discourse::Application.routes.append do

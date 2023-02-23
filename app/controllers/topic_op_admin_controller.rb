@@ -14,7 +14,7 @@ class TopicOpAdminController < ::ApplicationController
     params.require(:enabled)
     params.permit(:until)
 
-    topic = Topic.find_by({ id: params[:id] })
+    topic = BotLoggingTopic.find_by({ id: params[:id] })
     status = params[:status]
     topic_id = params[:topic_id].to_i
     enabled = params[:enabled] == "true"
@@ -54,10 +54,12 @@ class TopicOpAdminController < ::ApplicationController
     when "visible"
       unless guardian.can_unlist_topic_as_op?(topic)
         TopicOpUserAdminBot.botLogger(generate_without_perm_logger_text)
+        return render_fail "topic_op_admin.no_perm", status: 403
       end
     when "archived"
       unless guardian.can_archive_topic_as_op?(topic)
         TopicOpUserAdminBot.botLogger(generate_without_perm_logger_text)
+        return render_fail "topic_op_admin.no_perm", status: 403
       end
     else
       TopicOpUserAdminBot.botLogger(
@@ -73,7 +75,7 @@ class TopicOpAdminController < ::ApplicationController
     topic.update_status(
       status,
       enabled,
-      TopicOpUserAdminBot.getBot(),
+      SiteSetting.topic_op_admin_bot_override_user? ? TopicOpUserAdminBot.getBot() : guardian.user,
       until: params[:until],
       message: params[:reason] || I18n.t("topic_op_admin.reason_placeholder"),
     )

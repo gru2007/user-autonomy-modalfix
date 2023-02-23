@@ -30,10 +30,10 @@ module TopicOpUserAdminBot
     if SiteSetting.topic_op_admin_enable_topic_log?
       PostCreator.create!(
         getBot,
-        skip_validations: true,
         topic_id: SiteSetting.topic_op_admin_logger_topic?,
         raw: rawText,
         guardian: Guardian.new(Discourse.system_user),
+        import_mode: true,
       )
     end
   end
@@ -41,7 +41,6 @@ module TopicOpUserAdminBot
   def TopicOpUserAdminBot.botSendPost(topic_id, rawText)
     PostCreator.create!(
       getBot,
-      skip_validations: true,
       topic_id: topic_id,
       raw: rawText,
       guardian: Guardian.new(Discourse.system_user),
