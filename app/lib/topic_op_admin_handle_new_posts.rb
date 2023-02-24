@@ -68,8 +68,9 @@ DiscourseEvent.on(:post_created) do |*params|
             if seconds.nil?
               TopicOpUserAdminBot.botSendPost(
                 topic.id,
-                I18n.t("topic_op_admin.bot_send_template.ban.success.forever") + " @#{target_user.username}\n\n" +
-                  I18n.t("topic_op_admin.log_template.reason") + " #{reasons}",
+                I18n.t("topic_op_admin.bot_send_template.ban.success.forever") +
+                  " @#{target_user.username}\n\n" + I18n.t("topic_op_admin.log_template.reason") +
+                  " #{reasons}",
                 reply_to_post_number: post.post_number,
               )
             else
@@ -112,8 +113,9 @@ DiscourseEvent.on(:post_created) do |*params|
 
             TopicOpUserAdminBot.botSendPost(
               topic.id,
-              I18n.t("topic_op_admin.bot_send_template.unmute.success") + " @#{target_user.username}\n\n" +
-                I18n.t("topic_op_admin.log_template.reason") + " #{reasons}",
+              I18n.t("topic_op_admin.bot_send_template.unmute.success") +
+                " @#{target_user.username}\n\n" + I18n.t("topic_op_admin.log_template.reason") +
+                " #{reasons}",
               reply_to_post_number: post.post_number,
             )
           end,

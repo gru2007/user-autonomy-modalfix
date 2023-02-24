@@ -272,7 +272,7 @@ function init(api) {
   api.attachWidgetAction("topic-OP-admin-menu", "topicOPConvertToPrivateMessage", function () {
     toggleTopicOPAdminButton(this, "private", sendTopicConvertAjax);
   });
-  api.decorateWidget("timeline-controls:after", (helper) => {
+  api.decorateWidget("topic-admin-menu-button:after", (helper) => {
     const { fullScreen, topic } = helper.attrs;
     if (!fullScreen && currentUser) {
       return helper.attach("topic-OP-admin-menu-button", {

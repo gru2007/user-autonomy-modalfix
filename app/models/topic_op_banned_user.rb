@@ -5,7 +5,8 @@ class TopicOpBannedUser < ActiveRecord::Base
 
   def self.isBanned?(topic_id, user_id)
     user = User.find_by(id: user_id)
-    if user.admin? || user.moderator? || user.in_any_groups?(SiteSetting.topic_op_admin_never_be_banned_groups_map)
+    if user.admin? || user.moderator? ||
+         user.in_any_groups?(SiteSetting.topic_op_admin_never_be_banned_groups_map)
       return false
     end
     data = self.find_by(topic_id:, user_id:)
