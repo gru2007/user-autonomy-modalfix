@@ -3,10 +3,6 @@
 DiscourseEvent.on(:post_created) do |*params|
   post, opt, user = params
 
-  puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n-----------------"
-  puts opt
-  puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n-----------------"
-
   if TopicOpBannedUser.isBanned?(post.topic_id, user.id)
     if SiteSetting.topic_op_admin_delete_post_instead_of_hide?
       PostDestroyer.new(Discourse.system_user, post).destroy
@@ -27,10 +23,19 @@ DiscourseEvent.on(:post_created) do |*params|
 
         handles = {
           "silence" => ->(cmdlist) do
-            target_user_at, seconds, reasons = cmdlist.split " "
+            target_user_at, seconds, *reasons = cmdlist.split(" ")
+
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----------------------"
+            puts reasons
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----------------------"
+
+            reasons = reasons.join(" ")
+
+            puts reasons
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n----------------------"
 
             if seconds.to_i == 0
-              reasons = seconds
+              reasons = (seconds || "") + " " + reasons
               seconds = nil
             else
               seconds = seconds.to_i * 60
@@ -63,9 +68,8 @@ DiscourseEvent.on(:post_created) do |*params|
             if seconds.nil?
               TopicOpUserAdminBot.botSendPost(
                 topic.id,
-                I18n.t("topic_op_admin.bot_send_template.ban.success.forever") +
-                  " @#{target_user.username}\n\n" + I18n.t("topic_op_admin.log_template.reason") +
-                  " #{reasons}",
+                I18n.t("topic_op_admin.bot_send_template.ban.success.forever") + " @#{target_user.username}\n\n" +
+                  I18n.t("topic_op_admin.log_template.reason") + " #{reasons}",
                 reply_to_post_number: post.post_number,
               )
             else
@@ -80,7 +84,9 @@ DiscourseEvent.on(:post_created) do |*params|
             end
           end,
           "unmute" => ->(cmdlist) do
-            target_user_at, reasons = cmdlist.split " "
+            target_user_at, *reasons = cmdlist.split " "
+
+            reasons = reasons.join(" ")
 
             unless guardian.can_edit_topic_banned_user_list?(topic)
               TopicOpUserAdminBot.botSendPost(
@@ -106,9 +112,8 @@ DiscourseEvent.on(:post_created) do |*params|
 
             TopicOpUserAdminBot.botSendPost(
               topic.id,
-              I18n.t("topic_op_admin.bot_send_template.unmute.success") +
-                " @#{target_user.username}\n\n" + I18n.t("topic_op_admin.log_template.reason") +
-                " #{reasons}",
+              I18n.t("topic_op_admin.bot_send_template.unmute.success") + " @#{target_user.username}\n\n" +
+                I18n.t("topic_op_admin.log_template.reason") + " #{reasons}",
               reply_to_post_number: post.post_number,
             )
           end,
