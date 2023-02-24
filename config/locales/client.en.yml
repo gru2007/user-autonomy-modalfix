@@ -31,7 +31,7 @@ en:
         enable_close: "Allow OP to close/open this topic"
         enable_visible: "Allow OP to toggle visibility to this topic"
         enable_slow_mode: "Allow OP to set slow mode"
-        enable_make_PM: "Allow OP to make this topic a PM"
+        enable_make_PM: "Allow OP to convert this topic to PM"
         enable_archive: "Allow OP to archive/unarchive this topic"
         enable_set_timer: "Allow OP to set topic timer"
         enable_silence: "Allow OP to silence other users in the topic"

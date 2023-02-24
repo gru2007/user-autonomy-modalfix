@@ -1,9 +1,23 @@
 en:
+  system_messages:
+    silenced_by_topic_OP:
+      subject_template: "Post has been hidden"
+      text_body_template: "Hello, this is a private message automatically sent by the community to inform you that your post at <%{base_url}%{url}> has been hidden because the OP has banned you. \n\nContinuing to reply may be considered harassment and result in you being silenced from the entire site by moderators. \n\nIf you have objections, please contact our staff."
   topic_op_admin:
     no_perm: "You do not have permission tfor this operation"
     get_request: "We have received your request, please be patient."
     apply_title: "Application to set # as OP self-management"
     reason_placeholder: "Operated by the OP's request"
+    bot_send_template:
+      ban:
+        failed: "Failed: You can't to silence this user."
+        success: 
+          forever: "Success: You silenced"
+          temp: "Success: You silenced"
+          min: "minutes"
+      unmute:
+        failed: "Failed: You can't to silence this user."
+        success: "Success: You unbanned"
     log_template:
       reason: "Reason: "
       with_perm:

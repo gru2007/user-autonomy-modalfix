@@ -38,12 +38,20 @@ module TopicOpUserAdminBot
     end
   end
 
-  def TopicOpUserAdminBot.botSendPost(topic_id, rawText)
+  def TopicOpUserAdminBot.botSendPost(topic_id, rawText, **opts)
     PostCreator.create!(
       getBot,
       topic_id: topic_id,
       raw: rawText,
       guardian: Guardian.new(Discourse.system_user),
+      **opts,
     )
+  end
+
+  def TopicOpUserAdminBot.botParseCmd(text, handles)
+    return nil if text.length > 100
+    text = text.strip
+    slice_p = text.index " "
+    handles[text[...slice_p]]&.call(text[slice_p..].lstrip)
   end
 end

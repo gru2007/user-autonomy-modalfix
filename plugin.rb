@@ -24,6 +24,8 @@ after_initialize do
     app/lib/bot.rb
     app/models/topic_op_admin_status.rb
     app/models/bot_logging_topic.rb
+    app/lib/topic_op_admin_handle_new_posts.rb
+    app/models/topic_op_banned_user.rb
   ].each { |f| load File.expand_path("../#{f}", __FILE__) }
 
   Discourse::Application.routes.append do
@@ -70,5 +72,9 @@ after_initialize do
   end
   add_to_class(:guardian, :can_make_PM_as_op?) do |topic|
     topic.topic_op_admin_status?.can_make_PM && user.id == topic.user_id
+  end
+  add_to_class(:guardian, :can_edit_topic_banned_user_list?) do |topic|
+    return true if user.admin? || user.moderator?
+    topic.topic_op_admin_status?.can_silence && user.id == topic.user_id
   end
 end

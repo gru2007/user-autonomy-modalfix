@@ -1,9 +1,23 @@
 zh_CN:
+  system_messages:
+    silenced_by_topic_OP:
+      subject_template: "您的帖子已被隐藏"
+      text_body_template: "您好，这是一封由社区自动发送的私信，旨在通知您，由于楼主已经将您禁言，您在 <%{base_url}%{url}> 的帖子已被隐藏。\n\n继续发送帖子可能会被视为骚扰，并导致您被管理人员全站禁言。\n\n如果您有异议，请联系我们的管理人员。"
   topic_op_admin:
     no_perm: "您没有权限执行此操作"
     get_request: "您的请求我们已经收到，请耐心等待。"
     apply_title: "申请将 # 设置为楼主自我管理"
     reason_placeholder: "由楼主的要求操作"
+    bot_send_template:
+      ban:
+        failed: "出错了：您无权禁言该用户，可能是因为该用户不存在或者是Staff"
+        success: 
+          forever: "成功：你永久禁言了"
+          temp: "成功：你禁言了"
+          min: "分钟"
+      unmute:
+        failed: "出错了：您无法取消禁言该用户，可能是因为该用户不存在"
+        success: "成功：你取消禁言了"
     log_template:
       reason: "原因："
       with_perm:
