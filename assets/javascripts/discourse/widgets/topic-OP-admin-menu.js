@@ -99,12 +99,13 @@ createWidget("topic-OP-admin-menu-button", {
 
     if (!this.attrs.openDownwards) {
       if (rtl) {
-        position.left += -buttonDOMRect.width + menuWidth;
+        position.left -= buttonDOMRect.width + spacing;
       } else {
-        position.left -= -buttonDOMRect.width + menuWidth;
+        position.left += buttonDOMRect.width + spacing;
       }
-      if (position.left < 0) {
-        position.left = spacing;
+      position.top -= 50;
+      if (position.left > window.innerWidth - menuWidth) {
+        position.left = window.innerWidth - menuWidth - spacing;
       }
     } else {
       if (rtl) {

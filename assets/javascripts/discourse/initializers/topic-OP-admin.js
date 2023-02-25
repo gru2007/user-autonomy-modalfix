@@ -273,12 +273,12 @@ function init(api) {
     toggleTopicOPAdminButton(this, "private", sendTopicConvertAjax);
   });
   api.decorateWidget("topic-admin-menu-button:after", (helper) => {
-    const { fullScreen, topic } = helper.attrs;
-    if (!fullScreen && currentUser) {
+    const { openUpwards, topic } = helper.attrs;
+    if (currentUser) {
       return helper.attach("topic-OP-admin-menu-button", {
         topic,
         addKeyboardTargetClass: false,
-        openDownwards: true,
+        openDownwards: !openUpwards,
         currentUser,
       });
     }
