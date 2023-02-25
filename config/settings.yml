@@ -25,6 +25,33 @@ user_autonomy:
   topic_op_admin_logger_topic:
     default: 0
     client: false
+  topic_op_admin_basic_autoallowing_categories:
+    client: false
+    type: category_list
+    list_type: compact
+    default: ""
+    allow_any: false
+  topic_op_admin_basic_autoallowing_tags:
+    client: false
+    type: tag_list
+    list_type: compact
+    default: ""
+    allow_any: false
+  topic_op_admin_basic_list:
+    client: false
+    type: list
+    list_type: compact
+    default: "can_close|can_archive|can_slow_mode"
+    allow_any: false
+    choices:
+      - can_close
+      - can_archive
+      - can_make_PM
+      - can_visible
+      - can_slow_mode
+      - can_set_timer
+      - can_silence
+      - can_fold_posts
   topic_op_admin_require_reason_before_action:
     default: true
     client: true

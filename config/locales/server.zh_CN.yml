@@ -6,6 +6,7 @@ zh_CN:
   topic_op_admin:
     no_perm: "您没有权限执行此操作"
     get_request: "您的请求我们已经收到，请耐心等待。"
+    autoallowing_request: "您的请求已获批准。请检查您的楼主管理菜单。"
     apply_title: "申请将 # 设置为楼主自我管理"
     reason_placeholder: "由楼主的要求操作"
     bot_send_template:

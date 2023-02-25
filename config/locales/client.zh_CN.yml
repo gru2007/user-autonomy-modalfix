@@ -10,6 +10,9 @@ zh_CN:
     topic_op_admin_bot_override_user: "楼主自我管理时，使用bot代替楼主作为操作者"
     topic_op_admin_never_be_banned_groups: "这些群组的人永远不会被楼主禁言。管理人员始终默认在列表中。"
     topic_op_admin_delete_post_instead_of_hide: "被楼主禁言的用户在楼内发帖时的处理方式。True时，删除发送的帖子。False时，隐藏发送的帖子。"
+    topic_op_admin_basic_autoallowing_categories: "这些类别的话题，系统会自动批准楼主自治申请，并授予topic_op_admin_basic_list中的功能"
+    topic_op_admin_basic_autoallowing_tags: "这些标签的话题，系统会自动批准楼主自治申请，并授予topic_op_admin_basic_list中的功能"
+    topic_op_admin_basic_list: "系统自动批准楼主自治申请时的topic_op_admin_basic_list"
   js:
     topic_op_admin:
       menu_button_title: "楼主管理菜单"

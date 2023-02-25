@@ -199,6 +199,41 @@ class TopicOpAdminController < ::ApplicationController
         skip_validations: true,
       )
 
+    if SiteSetting
+         .topic_op_admin_basic_autoallowing_tags
+         .to_s
+         .split("|")
+         .intersect?(topic.tags.map(&:name)) ||
+         SiteSetting
+           .topic_op_admin_basic_autoallowing_categories
+           .to_s
+           .split("|")
+           .map(&:to_i)
+           .include?(topic.category&.id) && topic.topic_op_admin_status?.is_default
+      ds = {}
+      SiteSetting.topic_op_admin_basic_list.split("|").each { |i| ds[i] = true }
+
+      ns = {
+        can_close: ds["can_close"] || false,
+        can_archive: ds["can_archive"] || false,
+        can_make_PM: ds["can_make_PM"] || false,
+        can_visible: ds["can_visible"] || false,
+        can_slow_mode: ds["can_slow_mode"] || false,
+        can_set_timer: ds["can_set_timer"] || false,
+        can_silence: ds["can_silence"] || false,
+        can_fold_posts: ds["can_fold_posts"] || false,
+      }
+
+      PostCreator.create!(
+        Discourse.system_user,
+        topic_id: post.topic_id,
+        raw: I18n.t("topic_op_admin.autoallowing_request"),
+        skip_validations: true,
+      )
+
+      TopicOpAdminStatus.updateRecord(topic.id, **ns)
+    end
+
     render json: success_json.merge!(message: I18n.t("topic_op_admin.get_request"))
   end
 

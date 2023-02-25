@@ -6,6 +6,7 @@ en:
   topic_op_admin:
     no_perm: "You do not have permission tfor this operation"
     get_request: "We have received your request, please be patient."
+    autoallowing_request: "Your request have been approved. Please check your topic-OP-admin menu."
     apply_title: "Application to set # as OP self-management"
     reason_placeholder: "Operated by the OP's request"
     bot_send_template:
