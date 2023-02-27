@@ -481,7 +481,7 @@ class TopicOpAdminController < ::ApplicationController
     end
 
     if failed
-      return render_fail "topic_op_admin.successed_partial", status: 403
+      return render_fail "topic_op_admin.succeed_partial", status: 403
     else
       render json: { success: true }
     end
