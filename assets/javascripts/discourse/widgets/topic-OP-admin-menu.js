@@ -103,7 +103,7 @@ createWidget("topic-OP-admin-menu-button", {
       } else {
         position.left += buttonDOMRect.width + spacing;
       }
-      position.top -= 50;
+      position.top -= 20;
       if (position.left > window.innerWidth - menuWidth) {
         position.left = window.innerWidth - menuWidth - spacing;
       }
@@ -142,7 +142,7 @@ createWidget("topic-OP-admin-menu-button", {
 });
 
 export default createWidget("topic-OP-admin-menu", {
-  tagName: "div.popup-menu.topic-OP-admin-popup-menu",
+  tagName: "div.popup-menu.topic-admin-popup-menu.topic-OP-admin-popup-menu",
 
   buildClasses(attrs) {
     if (attrs.rightSide) {
@@ -168,6 +168,17 @@ export default createWidget("topic-OP-admin-menu", {
         icon: "cogs",
         fullLabel: "topic_op_admin.enable_topic_op_admin",
         button_group: "manipulating",
+      });
+    }
+
+    if (this.get("currentUser.staff")) {
+      this.addActionButton({
+        action: "topicOPBanUsers",
+        className: "topic-OP-admin-silence-user",
+        buttonClass: "popup-menu-btn",
+        icon: "microphone-slash",
+        fullLabel: "topic_op_admin.silence_user",
+        button_group: "staff",
       });
     }
 
@@ -261,6 +272,17 @@ export default createWidget("topic-OP-admin-menu", {
           : "topicOPConvertToPrivateMessage",
         icon: isPrivateMessage ? "comment" : "envelope",
         label: isPrivateMessage ? "actions.make_public" : "actions.make_private",
+        button_group: "staff",
+      });
+    }
+
+    if (topic.topic_op_admin_status.can_silence) {
+      this.addActionButton({
+        action: "topicOPBanUsers",
+        className: "topic-OP-admin-silence-user",
+        buttonClass: "popup-menu-btn",
+        icon: "microphone-slash",
+        fullLabel: "topic_op_admin.silence_user",
         button_group: "staff",
       });
     }
