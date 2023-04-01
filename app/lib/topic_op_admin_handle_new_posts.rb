@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 DiscourseEvent.on(:post_created) do |*params|
+  return unless SiteSetting.topic_op_admin_enabled
+
   post, opt, user = params
 
   if TopicOpBannedUser.isBanned?(post.topic_id, user.id)
