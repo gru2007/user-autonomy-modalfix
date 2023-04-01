@@ -1,8 +1,8 @@
 {
-  "name": "discourse-plugin-name",
-  "version": "0.0.1",
-  "repository": "TODO",
-  "author": "Discourse",
+  "name": "user-autonomy-plugin",
+  "version": "0.1.1",
+  "repository": "https://github.com/Lhc_fl/user-autonomy-plugin",
+  "author": "Lhc_fl",
   "license": "MIT",
   "devDependencies": {
     "@prettier/plugin-ruby": "^3.2.2",

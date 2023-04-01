@@ -175,7 +175,6 @@ class TopicOpAdminController < ::ApplicationController
   end
 
   def request_for_topic_op_admin
-    # TODO: request_for_topic_op_admin private message
     unless SiteSetting.topic_op_admin_enabled
       return render_fail "topic_op_admin.not_enabled", status: 405
     end
@@ -204,6 +203,7 @@ class TopicOpAdminController < ::ApplicationController
     if topic.topic_op_admin_status?.is_default
       ns = {}
       ds = {}
+      changed = false
 
       if SiteSetting
            .topic_op_admin_basic_autoallowing_tags
@@ -216,7 +216,7 @@ class TopicOpAdminController < ::ApplicationController
              .split("|")
              .map(&:to_i)
              .include?(topic.category&.id)
-        SiteSetting.topic_op_admin_basic_list.split("|").each { |i| ds[i] = true }
+        SiteSetting.topic_op_admin_basic_list.split("|").each { |i| changed = ds[i] = true }
       end
 
       %w[
@@ -234,7 +234,7 @@ class TopicOpAdminController < ::ApplicationController
              .to_s
              .split("|")
              .intersect?(topic.tags.map(&:name))
-          ds[status] = true
+          changed = ds[status] = true
         end
       end
 
@@ -249,12 +249,14 @@ class TopicOpAdminController < ::ApplicationController
         can_fold_posts: ds["can_fold_posts"] || false,
       }
 
-      PostCreator.create!(
-        Discourse.system_user,
-        topic_id: post.topic_id,
-        raw: I18n.t("topic_op_admin.autoallowing_request"),
-        skip_validations: true,
-      )
+      if changed
+        PostCreator.create!(
+          Discourse.system_user,
+          topic_id: post.topic_id,
+          raw: I18n.t("topic_op_admin.autoallowing_request"),
+          skip_validations: true,
+        )
+      end
 
       TopicOpAdminStatus.updateRecord(topic.id, **ns)
     end
@@ -262,6 +264,10 @@ class TopicOpAdminController < ::ApplicationController
   end
 
   def set_topic_op_timer
+    unless SiteSetting.topic_op_admin_enabled
+      return render_fail "topic_op_admin.not_enabled", status: 405
+    end
+
     params.permit(:time, :based_on_last_post, :category_id)
     params.require(:status_type)
 
@@ -321,6 +327,10 @@ class TopicOpAdminController < ::ApplicationController
   end
 
   def topic_op_convert_topic
+    unless SiteSetting.topic_op_admin_enabled
+      return render_fail "topic_op_admin.not_enabled", status: 405
+    end
+
     params.require(:id)
     params.require(:type)
     params.require(:reason)
@@ -370,6 +380,10 @@ class TopicOpAdminController < ::ApplicationController
   end
 
   def get_topic_op_banned_users
+    unless SiteSetting.topic_op_admin_enabled
+      return render_fail "topic_op_admin.not_enabled", status: 405
+    end
+
     params.require(:id)
 
     users = []
@@ -394,6 +408,10 @@ class TopicOpAdminController < ::ApplicationController
   end
 
   def update_topic_op_banned_users
+    unless SiteSetting.topic_op_admin_enabled
+      return render_fail "topic_op_admin.not_enabled", status: 405
+    end
+
     params.require(:id)
     params.permit(:new_silence_users)
     params.permit(:new_unmute_users)
