@@ -48,7 +48,8 @@
         class="btn-primary"
         @label="ok_value"
         @icon="inviteIcon"
-        @action={{this.submit}}
+        @action={{this.action.submit}}
+        @disabled=this.loading
       />
   </:footer>
 </DModal>
