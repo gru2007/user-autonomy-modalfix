@@ -85,6 +85,29 @@ function init(api) {
       model: {
         topic,
         currentUser,
+        submit: () => {
+          if (this.loading) {
+            return;
+          }
+          this.setProperties({ loading: true });
+          ajax("/topic_op_admin/set_topic_op_admin_status", {
+            method: "POST",
+            data: {
+              id: topic.id,
+              new_status: this.model.enables,
+            },
+          })
+            .then((res) => {
+              this.setProperties({ loading: false });
+              this.send("closeModal");
+              if (!res.success) {
+                dialog.alert(res.message);
+              } else {
+                window.location.reload();
+              }
+            })
+            .catch(popupAjaxError);
+        },
         action: {
           submit() {
             if (this.loading) {

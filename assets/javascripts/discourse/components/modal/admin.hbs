@@ -48,7 +48,14 @@
         class="btn-primary"
         @label="ok_value"
         @icon="inviteIcon"
-        @action={{this.action.submit}}
+        @action={{action model.action.submit}}
+      />
+      <DButton
+        @type="button"
+        class="btn-primary"
+        @label="ok_value"
+        @icon="inviteIcon"
+        @action={{model.action.submit}}
       />
   </:footer>
 </DModal>
