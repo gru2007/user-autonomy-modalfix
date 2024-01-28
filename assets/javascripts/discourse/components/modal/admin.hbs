@@ -1,4 +1,5 @@
 <DModal @closeModal={{@closeModal}} class="AdminModal-modal" @title="topic_op_admin.admin_modal.title">
+  <:body>
   <div class="set-topic-op-admin-status-modal-body">
     <h3>
       {{i18n "topic.title"}}
@@ -40,6 +41,16 @@
       </div>
     {{/if}}
   </div>
+  </:body>
+  <:footer>
+      <DButton
+        @type="button"
+        class="btn-primary"
+        @label="ok_value"
+        @icon="inviteIcon"
+        @action={{this.submit}}
+      />
+  </:footer>
 </DModal>
 <div class="modal-footer">
   {{d-button
