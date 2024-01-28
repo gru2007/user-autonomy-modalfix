@@ -3,6 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
 import showModal from "discourse/lib/show-modal";
+import AdminModal from "discourse/components/AdminModal";
 import TopicTimer from "discourse/models/topic-timer";
 import I18n from "I18n";
 import Composer from "discourse/models/composer";
@@ -78,7 +79,7 @@ function init(api) {
   api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function () {
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
-    showModal("set-topic-op-admin-status", {
+    this.modal.show(AdminModal, {
       model: {
         topic,
         currentUser,
