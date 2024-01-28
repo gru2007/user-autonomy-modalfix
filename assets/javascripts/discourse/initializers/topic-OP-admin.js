@@ -3,7 +3,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import Topic from "discourse/models/topic";
 import showModal from "discourse/lib/show-modal";
-import AdminModal from "discourse/plugins/user-autonomy-plugin/discourse/AdminModal";
+import AdminModal from "discourse/plugins/user-autonomy-plugin/discourse/componets/AdminModal";
 import TopicTimer from "discourse/models/topic-timer";
 import I18n from "I18n";
 import Composer from "discourse/models/composer";
