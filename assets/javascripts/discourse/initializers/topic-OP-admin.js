@@ -7,7 +7,8 @@ import AdminModal from "../components/modal/admin";
 import TopicTimer from "discourse/models/topic-timer";
 import I18n from "I18n";
 import Composer from "discourse/models/composer";
-import { inject as service } from "@ember/service";
+import EmberObject from "@ember/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 // import DiscourseURL from "discourse/lib/url";
 // import { getOwner } from "discourse-common/lib/get-owner";
 // import { avatarFor } from "discourse/widgets/post";
@@ -80,7 +81,8 @@ function init(api) {
   api.attachWidgetAction("topic-OP-admin-menu", "set-OP-admin-status", function () {
     const dialog = this.register.lookup("service:dialog");
     const topic = this.attrs.topic;
-    this.service.show(AdminModal, {
+    const modal = api.container.lookup("service:modal");
+    modal.show(AdminModal, {
       model: {
         topic,
         currentUser,
