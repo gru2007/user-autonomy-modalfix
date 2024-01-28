@@ -8,7 +8,6 @@ import TopicTimer from "discourse/models/topic-timer";
 import I18n from "I18n";
 import Composer from "discourse/models/composer";
 import EmberObject from "@ember/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
 // import DiscourseURL from "discourse/lib/url";
 // import { getOwner } from "discourse-common/lib/get-owner";
 // import { avatarFor } from "discourse/widgets/post";
